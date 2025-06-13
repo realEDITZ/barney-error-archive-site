@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Customizable Hub</title>
+    <style>
+        :root {
+            --primary-color: #9932cc;
+            --secondary-color: #32cd32;
+            --accent-color: #06b6d4;
+            --bg-gradient-1: #0f0f23;
+            --bg-gradient-2: #1a1a3e;
+            --text-color: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --glow-color: #6366f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--accent-color);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Header */
+        .header {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(99, 102, 241, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation Grid */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        /* Animated Link Cards */
+        .link-card {
+            position: relative;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .link-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .link-card:hover::before {
+            left: 100%;
+        }
+
+        .link-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 60px rgba(99, 102, 241, 0.3);
+            border-color: var(--glow-color);
+        }
+
+        .link-card:hover .card-icon {
+            transform: scale(1.2) rotate(360deg);
+            color: var(--accent-color);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+            transition: all 0.4s ease;
+            text-align: center;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .card-description {
+            opacity: 0.7;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        /* Floating action button for customization */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(99, 102, 241, 0.6);
+        }
+
+        /* Customization panel */
+        .customization-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            transition: right 0.4s ease;
+            z-index: 1001;
+            overflow-y: auto;
+        }
+
+        .customization-panel.open {
+            right: 0;
+        }
+
+        .panel-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: var(--accent-color);
+        }
+
+        .control-group {
+            margin-bottom: 25px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .control-group input, .control-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+        }
+
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .nav-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .customization-panel {
+                width: 100vw;
+                right: -100vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <h1 id="siteTitle">THE BARNEY ERROR PRESENTATION ARCHIVE</h1>
+        <p id="siteDescription">this site contains every barney error presentation that was ever made IN TIMELINE ORDER</p>
+    </div>
+
+    <!-- Main container -->
+    <div class="container">
+        <div class="nav-grid" id="navGrid">
+            <!-- Default links - easily customizable -->
+            <a href="https://docs.google.com/presentation/d/1GzpFJHM7Z_5_-sgAPhvyo80EnISa_mvz/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">🚗</span>
+                <div class="card-title">BARNEY SUCKS AT DRIVING</div>
+                <div class="card-description">the one that started it all</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1dYAPp4iIE5Ny04-qKrOkKA6dxMbrtUnJ/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">❌</span>
+                <div class="card-title">BARNEY ERROR 1</div>
+                <div class="card-description">the first REAL barney error</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1brVO398a7NRJ3q3W3X3lmnnIjpPlkGQm/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">🐟</span>
+                <div class="card-title">THE FISHSTICK BROS GET ARRESTED</div>
+                <div class="card-description">the first spinnoff error (unfinished)</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1PyUnDwIyZEKVV5VlHzy7xLtyhoPOY0qV/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">💥</span>
+                <div class="card-title">BARNEY EXPLOSION!</div>
+                <div class="card-description">BARNEY EXPLOSION!</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1wBbU1twSIC6iHdSPahcMwtfaWFsaZNdB/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">🦸</span>
+                <div class="card-title">JOHN CENA AND BATMAN</div>
+                <div class="card-description">an unfinished screenplay of john cena and batman fighting cuz why not</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1GVC49VZt5L-dvt3qXgjsanwhWrspt2pZ/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">🦎</span>
+                <div class="card-title">I HATE LIZZY</div>
+                <div class="card-description">first mention of LIZZY in a spinoff</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1k6ZallbOr292rdtDt7bS5BSzE-Ca8ghV/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">⚡</span>
+                <div class="card-title">JOHN CENA IS THE WORST WRESLER AND ACTRESS IN THE UNIVERSE!!!!!!!!!!</div>
+                <div class="card-description">JOHN CENA MEETS BATMAN BIG TIME!</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1lh_iEQ7PaS53w8s2b1yVAQz7weHNFgDk/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">🌪️</span>
+                <div class="card-title">BARNEY CHANGES OVERTIME</div>
+                <div class="card-description">the evolution of barney over time</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1HExPyRCWaxaImsjGm3ogxwXs2TQPaFU0/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">🚀</span>
+                <div class="card-title">ELMO AND BABY BOP ARE ALIKE BECAUSE THEY ARE EVIL AND 333</div>
+                <div class="card-description">look at me me me i'm 3 3 3 
+                the LAST powerpoint of the ohio era</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1Gp2T_A0-g1xNybhghxvUrNGn0wch4sh0/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">🚀</span>
+                <div class="card-title">BARNEY ERROR 15: CATS VS DINOS(NEVER BEFORE SEEN ORIGINAL CUT)</div>
+                <div class="card-description">the first powerpoint error to feature nature cat as a main charecter and the first powerpoint after the ohio era (this HAS DELETED SCENES AND SONG MARKERS)</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1fmJxvhqJSOQL4T2jro_l00KnE1iERNzg/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">🤖</span>
+                <div class="card-title">BARNEY ERROR 15: CATS VS DINOS</div>
+                <div class="card-description">the first powerpoint error to feature nature cat as a main charecter and the first powerpoint after the ohio era (final cut)</div>
+            </a>
+
+            <a href="https://drive.google.com/file/d/1OT5SVzNt4e9L9IcSOWgf4JihjVidioSW/view?usp=drive_link" class="link-card" target="_blank">
+                <span class="card-icon">🧙</span>
+                <div class="card-title">JOHN IS A KILLER: BARNEY EDITION</div>
+                <div class="card-description">an ohio remaster after ohio, the last recorded error of 2017</div>
+            </a>
+
+            <a href="https://drive.google.com/file/d/1NlCKOAKb4b-Dvbduu-QpSRcVZSn_66-o/view?usp=drive_link" class="link-card" target="_blank">
+                <span class="card-icon">🏠</span>
+                <div class="card-title">FIRST BEFORE FINAL BOOOO</div>
+                <div class="card-description">the last original powerpoint of 2017 and the first that used the brand new rant style</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1zFOj3i6Yo4wLdlslo-suyuIHlmJaAD7l/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">🦖</span>
+                <div class="card-title">BARNEY ERROR 14</div>
+                <div class="card-description">a 2018 ohio remaster, first to use dinosaur train</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/154m8444T4z4ZoJ88rJgdws-c2NCXLlbE/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">🌊</span>
+                <div class="card-title">THE DOUBLE RANT: the finale</div>
+                <div class="card-description">the last rant style powerpoint and the first original one of 2019</div>
+            </a>
+
+            <a href="https://docs.google.com/presentation/d/1-CvijE5nu17cvNKLbRilKC18eD7gXwrs/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">🎪</span>
+                <div class="card-title">NATURE CAT PRODUCTIONS TRIBUTE</div>
+                <div class="card-description">a 2019 ohio remaster, not an error but a heartfelt tribute to nature cat productions 150th anniversary</div>
+            </a>
+
+            <a href="https://drive.google.com/file/d/1NKTvkBfq8FTaPyHoIkPKLLfqTFk4oSXU/view?usp=drive_link" class="link-card" target="_blank">
+                <span class="card-icon">👻</span>
+                <div class="card-title">BARNEY ERROR 16: NATURE CAT'S SEQUEL</div>
+                <div class="card-description">the sequel to barney error 15, first introduction of the angry birds in error lore</div>
+            </a>
+            <a href="https://docs.google.com/presentation/d/1TBg8XTtVufiaQn6isfLAoNKJ1IvCXZXU/edit?usp=drive_link&ouid=112608920854348085010&rtpof=true&sd=true" class="link-card" target="_blank">
+                <span class="card-icon">HONOURABLE MENTION</span>
+                <div class="card-title">BARNEY ERROR 2</div>
+                <div class="card-description">the 2019 remaster of the sequel to the very first barney error from ohio</div>
+            </a>
+            <a href="https://1drv.ms/p/c/FD9AFE6A274848A9/AalISCdq_poggP2SAAAAAAA?e=FOZDaz" class="link-card" target="_blank">
+                <span class="card-icon">CURRENTLY A WORK IN PROGRESS...</span>
+                <div class="card-title">BARNEY ERROR 17: CATS VS DINOS: THE FINALE</div>
+                <div class="card-description">the very last barney error that will ever be made :( it is still a work in progress and is currently reciving new updates. it will be the LONGEST and most TECHNOLOGICALLY ADVANCED error since 2017</div>
+            </a>
+            
+            
+        </div>
+    </div>
+
+    <!-- Customization panel -->
+    <div class="customization-panel" id="customPanel">
+        <div class="panel-header">THE BARNEY ERROR POWERPOINT ARCHIVE</div>
+        
+        <div class="control-group">
+            <label for="titleInput">Site Title:</label>
+            <input type="text" id="titleInput" value="THE BARNEY ERROR PRESENTATION ARCHIVE">
+        </div>
+
+        <div class="control-group">
+            <label for="descriptionInput">Description:</label>
+            <input type="text" id="descriptionInput" value="this site contains every barney error presentation that was ever made">
+        </div>
+
+        <div class="control-group">
+            <label for="primaryColor">Primary Color:</label>
+            <input type="color" id="primaryColor" value="#9932cc">
+            <span class="color-preview" id="primaryPreview"></span>
+        </div>
+
+        <div class="control-group">
+            <label for="secondaryColor">Secondary Color:</label>
+            <input type="color" id="secondaryColor" value="#32cd32">
+            <span class="color-preview" id="secondaryPreview"></span>
+        </div>
+
+        <div class="control-group">
+            <label for="accentColor">Accent Color:</label>
+            <input type="color" id="accentColor" value="#06b6d4">
+            <span class="color-preview" id="accentPreview"></span>
+        </div>
+
+        <div class="control-group">
+            <label>Add New Link:</label>
+            <input type="text" id="newLinkTitle" placeholder="Link Title">
+            <input type="text" id="newLinkUrl" placeholder="https://example.com" style="margin-top: 8px;">
+            <input type="text" id="newLinkIcon" placeholder="Emoji (e.g., 🔗)" style="margin-top: 8px;">
+            <input type="text" id="newLinkDesc" placeholder="Description" style="margin-top: 8px;">
+            <button onclick="addNewLink()" style="margin-top: 10px; padding: 10px 20px; background: var(--primary-color); border: none; border-radius: 8px; color: white; cursor: pointer;">Add Link</button>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Toggle customization panel
+        function toggleCustomization() {
+            const panel = document.getElementById('customPanel');
+            panel.classList.toggle('open');
+        }
+
+        // Close panel when clicking outside
+        document.addEventListener('click', function(e) {
+            const panel = document.getElementById('customPanel');
+            const fab = document.querySelector('.fab');
+            
+            if (!panel.contains(e.target) && !fab.contains(e.target)) {
+                panel.classList.remove('open');
+            }
+        });
+
+        // Update colors in real-time
+        function updateColors() {
+            const root = document.documentElement;
+            const primaryColor = document.getElementById('primaryColor').value;
+            const secondaryColor = document.getElementById('secondaryColor').value;
+            const accentColor = document.getElementById('accentColor').value;
+
+            root.style.setProperty('--primary-color', primaryColor);
+            root.style.setProperty('--secondary-color', secondaryColor);
+            root.style.setProperty('--accent-color', accentColor);
+            root.style.setProperty('--glow-color', primaryColor);
+
+            // Update color previews
+            document.getElementById('primaryPreview').style.backgroundColor = primaryColor;
+            document.getElementById('secondaryPreview').style.backgroundColor = secondaryColor;
+            document.getElementById('accentPreview').style.backgroundColor = accentColor;
+        }
+
+        // Update text content
+        function updateText() {
+            const title = document.getElementById('titleInput').value;
+            const description = document.getElementById('descriptionInput').value;
+
+            document.getElementById('siteTitle').textContent = title;
+            document.getElementById('siteDescription').textContent = description;
+            document.title = title;
+        }
+
+        // Add new link
+        function addNewLink() {
+            const title = document.getElementById('newLinkTitle').value;
+            const url = document.getElementById('newLinkUrl').value;
+            const icon = document.getElementById('newLinkIcon').value;
+            const description = document.getElementById('newLinkDesc').value;
+
+            if (title && url) {
+                const navGrid = document.getElementById('navGrid');
+                const linkCard = document.createElement('a');
+                linkCard.href = url;
+                linkCard.className = 'link-card';
+                linkCard.target = '_blank';
+                linkCard.innerHTML = `
+                    <span class="card-icon">${icon || '🔗'}</span>
+                    <div class="card-title">${title}</div>
+                    <div class="card-description">${description || 'Custom link'}</div>
+                `;
+
+                navGrid.appendChild(linkCard);
+
+                // Clear inputs
+                document.getElementById('newLinkTitle').value = '';
+                document.getElementById('newLinkUrl').value = '';
+                document.getElementById('newLinkIcon').value = '';
+                document.getElementById('newLinkDesc').value = '';
+            }
+        }
+
+        // Event listeners
+        document.getElementById('primaryColor').addEventListener('input', updateColors);
+        document.getElementById('secondaryColor').addEventListener('input', updateColors);
+        document.getElementById('accentColor').addEventListener('input', updateColors);
+        document.getElementById('titleInput').addEventListener('input', updateText);
+        document.getElementById('descriptionInput').addEventListener('input', updateText);
+
+        // Initialize
+        window.addEventListener('load', function() {
+            createParticles();
+            updateColors();
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                toggleCustomization();
+            }
+        });
+    </script>
+</body>
+</html>
