@@ -177,85 +177,6 @@
             font-size: 0.9rem;
         }
 
-        /* Floating action button for customization */
-        .fab {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            border: none;
-            border-radius: 50%;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
-            transition: all 0.3s ease;
-            z-index: 1000;
-        }
-
-        .fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(99, 102, 241, 0.6);
-        }
-
-        /* Customization panel */
-        .customization-panel {
-            position: fixed;
-            top: 0;
-            right: -400px;
-            width: 400px;
-            height: 100vh;
-            background: rgba(15, 15, 35, 0.95);
-            backdrop-filter: blur(20px);
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            transition: right 0.4s ease;
-            z-index: 1001;
-            overflow-y: auto;
-        }
-
-        .customization-panel.open {
-            right: 0;
-        }
-
-        .panel-header {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 30px;
-            color: var(--accent-color);
-        }
-
-        .control-group {
-            margin-bottom: 25px;
-        }
-
-        .control-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .control-group input, .control-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-size: 14px;
-        }
-
-        .color-preview {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-left: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-
         /* Responsive design */
         @media (max-width: 768px) {
             .header h1 {
@@ -265,11 +186,6 @@
             .nav-grid {
                 grid-template-columns: 1fr;
                 gap: 20px;
-            }
-            
-            .customization-panel {
-                width: 100vw;
-                right: -100vw;
             }
 
             .card-title {
@@ -415,51 +331,6 @@
         </div>
     </div>
 
-    <!-- Floating Action Button -->
-    <button class="fab" onclick="toggleCustomization()">⚙️</button>
-
-    <!-- Customization panel -->
-    <div class="customization-panel" id="customPanel">
-        <div class="panel-header">THE BARNEY ERROR POWERPOINT ARCHIVE</div>
-        
-        <div class="control-group">
-            <label for="titleInput">Site Title:</label>
-            <input type="text" id="titleInput" value="THE BARNEY ERROR PRESENTATION ARCHIVE">
-        </div>
-
-        <div class="control-group">
-            <label for="descriptionInput">Description:</label>
-            <input type="text" id="descriptionInput" value="this site contains every barney error presentation that was ever made">
-        </div>
-
-        <div class="control-group">
-            <label for="primaryColor">Primary Color:</label>
-            <input type="color" id="primaryColor" value="#9932cc">
-            <span class="color-preview" id="primaryPreview"></span>
-        </div>
-
-        <div class="control-group">
-            <label for="secondaryColor">Secondary Color:</label>
-            <input type="color" id="secondaryColor" value="#32cd32">
-            <span class="color-preview" id="secondaryPreview"></span>
-        </div>
-
-        <div class="control-group">
-            <label for="accentColor">Accent Color:</label>
-            <input type="color" id="accentColor" value="#06b6d4">
-            <span class="color-preview" id="accentPreview"></span>
-        </div>
-
-        <div class="control-group">
-            <label>Add New Link:</label>
-            <input type="text" id="newLinkTitle" placeholder="Link Title">
-            <input type="text" id="newLinkUrl" placeholder="https://example.com" style="margin-top: 8px;">
-            <input type="text" id="newLinkIcon" placeholder="Emoji (e.g., 🔗)" style="margin-top: 8px;">
-            <input type="text" id="newLinkDesc" placeholder="Description" style="margin-top: 8px;">
-            <button onclick="addNewLink()" style="margin-top: 10px; padding: 10px 20px; background: var(--primary-color); border: none; border-radius: 8px; color: white; cursor: pointer;">Add Link</button>
-        </div>
-    </div>
-
     <script>
         // Create floating particles
         function createParticles() {
@@ -477,98 +348,9 @@
             }
         }
 
-        // Toggle customization panel
-        function toggleCustomization() {
-            const panel = document.getElementById('customPanel');
-            panel.classList.toggle('open');
-        }
-
-        // Close panel when clicking outside
-        document.addEventListener('click', function(e) {
-            const panel = document.getElementById('customPanel');
-            const fab = document.querySelector('.fab');
-            
-            if (!panel.contains(e.target) && !fab.contains(e.target)) {
-                panel.classList.remove('open');
-            }
-        });
-
-        // Update colors in real-time
-        function updateColors() {
-            const root = document.documentElement;
-            const primaryColor = document.getElementById('primaryColor').value;
-            const secondaryColor = document.getElementById('secondaryColor').value;
-            const accentColor = document.getElementById('accentColor').value;
-
-            root.style.setProperty('--primary-color', primaryColor);
-            root.style.setProperty('--secondary-color', secondaryColor);
-            root.style.setProperty('--accent-color', accentColor);
-            root.style.setProperty('--glow-color', primaryColor);
-
-            // Update color previews
-            document.getElementById('primaryPreview').style.backgroundColor = primaryColor;
-            document.getElementById('secondaryPreview').style.backgroundColor = secondaryColor;
-            document.getElementById('accentPreview').style.backgroundColor = accentColor;
-        }
-
-        // Update text content
-        function updateText() {
-            const title = document.getElementById('titleInput').value;
-            const description = document.getElementById('descriptionInput').value;
-
-            document.getElementById('siteTitle').textContent = title;
-            document.getElementById('siteDescription').textContent = description;
-            document.title = title;
-        }
-
-        // Add new link
-        function addNewLink() {
-            const title = document.getElementById('newLinkTitle').value;
-            const url = document.getElementById('newLinkUrl').value;
-            const icon = document.getElementById('newLinkIcon').value;
-            const description = document.getElementById('newLinkDesc').value;
-
-            if (title && url) {
-                const navGrid = document.getElementById('navGrid');
-                const linkCard = document.createElement('a');
-                linkCard.href = url;
-                linkCard.className = 'link-card';
-                linkCard.target = '_blank';
-                linkCard.innerHTML = `
-                    <span class="card-icon">${icon || '🔗'}</span>
-                    <div class="card-title">${title}</div>
-                    <div class="card-description">${description || 'Custom link'}</div>
-                `;
-
-                navGrid.appendChild(linkCard);
-
-                // Clear inputs
-                document.getElementById('newLinkTitle').value = '';
-                document.getElementById('newLinkUrl').value = '';
-                document.getElementById('newLinkIcon').value = '';
-                document.getElementById('newLinkDesc').value = '';
-            }
-        }
-
-        // Event listeners
-        document.getElementById('primaryColor').addEventListener('input', updateColors);
-        document.getElementById('secondaryColor').addEventListener('input', updateColors);
-        document.getElementById('accentColor').addEventListener('input', updateColors);
-        document.getElementById('titleInput').addEventListener('input', updateText);
-        document.getElementById('descriptionInput').addEventListener('input', updateText);
-
         // Initialize
         window.addEventListener('load', function() {
             createParticles();
-            updateColors();
-        });
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.key === 'k') {
-                e.preventDefault();
-                toggleCustomization();
-            }
         });
     </script>
 </body>
